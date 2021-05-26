@@ -48,4 +48,4 @@ jobs:
         shell: bash
         run: |
           cd cython
-          python run_tests.py
+          python runtests.py
