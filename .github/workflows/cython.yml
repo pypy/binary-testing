@@ -2,7 +2,7 @@
 
 name: Cython
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
@@ -19,7 +19,7 @@ on:
   #        │ │ ┌───────────── day of the month (1 - 31)
   #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
   #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
-  #        │ │ │ │ │                                   
+  #        │ │ │ │ │
   - cron: "0 2 * * *"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -29,8 +29,31 @@ jobs:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
+        backend: [c]
+        extra_cflags: ['', '-DCYTHON_USE_TYPE_SPECS=1']
+        include:
+          - os: windows-latest
+            cflags: '/Od /W3'
+          - os: ubuntu-latest
+            cflags: '-O0 -g3'
+          - os: macOS-latest
+            cflags: '-O0 -g3'
+
+    timeout-minutes: 60
+    env:
+      BACKEND: ${{ matrix.backend }}
+      OS_NAME: ${{ matrix.os }}
+      PYTHON_VERSION: pypy-3.7
+      USE_CCACHE: 1
+      CCACHE_SLOPPINESS: "pch_defines,time_macros"
+      CCACHE_COMPRESS: 1
+      CCACHE_MAXSIZE: "200M"
+      NO_CYTHON_COMPILE: 1
+      CFLAGS: ${{ matrix.cflags }} ${{ matrix.extra_cflags }}
+
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -41,11 +64,15 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 1
           repository: cython/cython
           path: cython
-          
+
       - name: test cython
+        continue-on-error: false
         shell: bash
         run: |
           cd cython
-          python runtests.py
+          python -m pip install -U pip setuptools wheel
+          python setup.py build_ext -i
+          python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.bbackend }} -j7
