@@ -67,6 +67,8 @@ jobs:
           fetch-depth: 1
           repository: cython/cython
           path: cython
+          # checkout PR 4203 to fix windows
+          ref: e7dda9bad53b86d849e63672fb0f75a7fc325307
 
       - name: install external dependencies
         if : ${{ matrix.os == 'ubuntu-latest' }}
