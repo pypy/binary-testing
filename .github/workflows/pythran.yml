@@ -30,7 +30,7 @@ jobs:
         os: [ubuntu-18.04]
         cpp-version: [g++-5, clang-5.0]
 
-    timeout-minutes: 60
+    timeout-minutes: 160
 
     steps:
     - uses: actions/checkout@v2
@@ -61,4 +61,4 @@ jobs:
         cd pythran
         export CC=`echo ${{ matrix.cpp-version }} | sed -e 's/g++/gcc/'`
         export CXX=`echo ${{ matrix.cpp-version }} | sed -e 's/clang/clang++/'`
-        pytest pythran/tests/test_*.py -v -x --numprocesses=auto $PYTEST_ARGS
+        pytest pythran/tests/test_*.py -v --numprocesses=auto $PYTEST_ARGS
