@@ -1,0 +1,64 @@
+name: Pythran
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  schedule:
+  #        ┌───────────── minute (0 - 59)
+  #        │ ┌───────────── hour (0 - 23)
+  #        │ │ ┌───────────── day of the month (1 - 31)
+  #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #        │ │ │ │ │
+  - cron: "0 2 * * 0"
+
+jobs:
+  pythran:
+    name: Test on ${{ matrix.os }} ${{ matrix.backend }} ${{ matrix.extra_cflags }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-18.04]
+        cpp-version: [g++-5, clang-5.0]
+
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: pypy-3.7-nightly
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        repository: serge-sans-paille/pythran
+        path: pythran
+
+    - name: Install dependencies
+      run: |
+        cd pythran
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install ipython nbval pytest-xdist cython wheel
+        sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
+    - name: Setup
+      run: |
+        cd pythran
+        python setup.py install
+        printf '[commpiler]\nblas=openblas\n' > ~/.pythranrc
+    - name: Testing sequential
+      run: |
+        cd pythran
+        export CC=`echo ${{ matrix.cpp-version }} | sed -e 's/g++/gcc/'`
+        export CXX=`echo ${{ matrix.cpp-version }} | sed -e 's/clang/clang++/'`
+        pytest pythran/tests/test_*.py -v -x --numprocesses=auto $PYTEST_ARGS
