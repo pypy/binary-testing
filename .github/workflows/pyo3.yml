@@ -77,7 +77,7 @@ jobs:
       env:
         # Necessary to force PyO3 to allow building against PyPy despite no
         # Py_Initialize API
-        PYO3_C: 1
+        PYO3_CI: 1
 
     # In the future, might want to also try using the "abi3" feature once PyPy
     # supports the Python stable API.
