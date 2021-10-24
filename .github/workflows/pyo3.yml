@@ -73,7 +73,7 @@ jobs:
       shell: bash
       run: |
         cd pyo3
-        cargo build --lib --tests --features=$(make list_all_additive_features)
+        cargo build --lib --tests --features="$(make list_all_additive_features)"
       env:
         # Necessary to force PyO3 to allow building against PyPy despite no
         # Py_Initialize API
