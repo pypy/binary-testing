@@ -1,0 +1,47 @@
+name: NumPy
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  schedule:
+  #        ┌───────────── minute (0 - 59)
+  #        │ ┌───────────── hour (0 - 23)
+  #        │ │ ┌───────────── day of the month (1 - 31)
+  #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #        │ │ │ │ │
+  - cron: "0 2 * * 0"
+
+jobs:
+  numpy:
+    name: NumPy ${{ matrix.os }}/${{ matrix.python_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python_version: [pypy-3.7-nightly]
+
+    timeout-minutes: 20
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python_version }}
+
+    - name: Install NumPy
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --only-binary :all: numpy hypothesis pytest
+    - name: Testing NumPy
+      run: |
+        python -c "import numpy; numpy.test(verbose=3)"
