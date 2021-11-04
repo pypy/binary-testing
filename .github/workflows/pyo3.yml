@@ -1,0 +1,94 @@
+name: PyO3
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  schedule:
+  #        ┌───────────── minute (0 - 59)
+  #        │ ┌───────────── hour (0 - 23)
+  #        │ │ ┌───────────── day of the month (1 - 31)
+  #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #        │ │ │ │ │
+  - cron: "0 2 * * 0"
+
+jobs:
+  pyo3:
+    name: PyO3 ${{ matrix.os }}/${{ matrix.python_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python_version: [pypy-3.7-nightly, pypy-3.8-nightly]
+
+    timeout-minutes: 20
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python_version }}
+
+    - name: Checkout PyO3
+      uses: actions/checkout@v2
+      with:
+        repository: PyO3/pyo3
+        path: pyo3
+
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        default: true
+        # needed to correctly format errors, see #1865
+        components: rust-src
+
+    # NB only builds PyO3's Rust library and tests, can't run these, because
+    # PyPy doesn't support a Py_Initialize API to call PyPy from Rust
+    # executables.
+    #
+    # These jobs just serve as a check that PyO3 is able to link against PyPy
+    # symbols as expected.
+    - name: Build PyO3 Rust lib and tests - no features
+      shell: bash
+      run: |
+        cd pyo3
+        cargo build --lib --tests
+      env:
+        # Necessary to force PyO3 to allow building against PyPy despite no
+        # Py_Initialize API
+        PYO3_CI: 1
+
+    - name: Build PyO3 Rust lib and tests - with features
+      shell: bash
+      run: |
+        cd pyo3
+        cargo build --lib --tests --features="$(make list_all_additive_features)"
+      env:
+        # Necessary to force PyO3 to allow building against PyPy despite no
+        # Py_Initialize API
+        PYO3_CI: 1
+
+    # In the future, might want to also try using the "abi3" feature once PyPy
+    # supports the Python stable API.
+
+    - name: Prepare required packages
+      run: |
+        pip install -U pip tox
+
+    # Build some extension modules using PyO3 and test them using PyPy.
+    - name: Test PyO3 examples
+      shell: bash
+      run: |
+        cd pyo3
+        make test_py
