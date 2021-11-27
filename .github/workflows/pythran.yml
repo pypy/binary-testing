@@ -82,13 +82,15 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install scipy wheel pythran-openblas pytest
+        pip install wheel pythran-openblas pytest pytest-timeout
+        # pip install scipy  # no wheel availabe, compilation takes too long
     - name: Setup
       run: |
         python setup.py install
     - name: Testing sequential
       run: |
-        pytest pythran/tests/test_ndarray.py -v -x
-        pytest pythran/tests/test_scipy.py -v -x
-        pytest pythran/tests/test_base.py -v -x
-        pytest pythran/tests/test_advanced.py -v -x
+        pytest pythran/tests/test_ndarray.py -v --timeout 600
+        # pytest pythran/tests/test_scipy.py -v --timeout 600
+        pytest pythran/tests/test_base.py -v --timeout 600
+        pytest pythran/tests/test_cases.py -v --timeout 600
+        pytest pythran/tests/test_advanced.py -v --timeout 600
