@@ -81,5 +81,5 @@ jobs:
         run: |
           cd cython
           python -m pip install -U pip setuptools wheel
-          python setup.py build_ext -i
-          python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.bbackend }} -j7
+          # python setup.py build_ext -i  # pypy should be faster with pure python
+          python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.backend }} -j7
