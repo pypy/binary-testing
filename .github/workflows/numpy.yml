@@ -41,7 +41,7 @@ jobs:
     - name: Install NumPy
       run: |
         python -m pip install --upgrade pip
-        python -m pip install --only-binary :all: numpy hypothesis pytest
+        python -m pip install numpy hypothesis pytest
     - name: Testing NumPy
       run: |
         python -c "import numpy; numpy.test(verbose=3)"
