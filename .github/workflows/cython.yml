@@ -81,5 +81,4 @@ jobs:
         run: |
           cd cython
           python -m pip install -U pip setuptools wheel
-          python setup.py build_ext -i
           python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.bbackend }} -j7
