@@ -78,6 +78,12 @@ jobs:
       run: |
         choco install llvm --yes
         @("C:/Program Files/LLVM/bin") +  (Get-Content $env:GITHUB_PATH) | Set-Content $env:GITHUB_PATH
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+        repository: serge-sans-paille/pythran
+        path: pythran
+
     - name: Install dependencies
       run: |
         cd pythran
