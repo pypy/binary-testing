@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
-        python-version: pypy-3.7-nightly
+        python-version: pypy-3.8-nightly
 
     - uses: actions/checkout@v2
       with:
@@ -73,7 +73,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v2
       with:
-        python-version: pypy-3.7-nightly
+        python-version: pypy-3.8-nightly
         architecture: ${{ matrix.architecture }}
     - name: Install clang-cl
       run: |
@@ -91,6 +91,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install wheel pythran-openblas pytest pytest-timeout
+        pip install git+https://github.com/cython/cython
         # pip install scipy  # no wheel availabe, compilation takes too long
     - name: Setup
       run: |
