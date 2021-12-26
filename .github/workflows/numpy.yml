@@ -27,8 +27,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        python_version: [pypy-3.7-nightly]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python_version: [pypy-3.8-nightly]
 
     timeout-minutes: 20
 
@@ -41,7 +41,8 @@ jobs:
     - name: Install NumPy
       run: |
         python -m pip install --upgrade pip
-        python -m pip install numpy hypothesis pytest
+        python -m pip install hypothesis pytest
+        python -m pip install git+https://github.com/numpy/numpy
     - name: Testing NumPy
       run: |
         python -c "import numpy; numpy.test(verbose=3)"
