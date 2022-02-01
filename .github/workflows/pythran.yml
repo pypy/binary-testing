@@ -29,6 +29,7 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
         cpp-version: [g++-5, clang-5.0]
+        python_version: [pypy-3.8-nightly, pypy-3.9-nightly]
 
     timeout-minutes: 160
 
@@ -36,7 +37,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-python@v2
       with:
-        python-version: pypy-3.8-nightly
+        python-version: ${{ matrix.python_version }}
 
     - uses: actions/checkout@v2
       with:
