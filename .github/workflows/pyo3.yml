@@ -84,7 +84,7 @@ jobs:
 
     - name: Prepare required packages
       run: |
-        pip install -U pip tox
+        pip install -U pip tox nox
 
     # Build some extension modules using PyO3 and test them using PyPy.
     - name: Test PyO3 examples
