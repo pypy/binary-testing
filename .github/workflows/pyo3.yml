@@ -73,7 +73,7 @@ jobs:
       shell: bash
       run: |
         cd pyo3
-        cargo build --lib --tests --features="$(make list_all_additive_features)"
+        cargo build --lib --tests --features=full
       env:
         # Necessary to force PyO3 to allow building against PyPy despite no
         # Py_Initialize API
@@ -84,11 +84,11 @@ jobs:
 
     - name: Prepare required packages
       run: |
-        pip install -U pip tox
+        pip install -U pip nox
 
     # Build some extension modules using PyO3 and test them using PyPy.
     - name: Test PyO3 examples
       shell: bash
       run: |
         cd pyo3
-        make test_py
+        cargo xtask test-py
