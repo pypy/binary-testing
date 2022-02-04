@@ -67,7 +67,7 @@ jobs:
         with:
           fetch-depth: 1
           repository: cython/cython
-          path: cython
+          path: cy
 
       - name: install external dependencies
         if : ${{ matrix.os == 'ubuntu-latest' }}
@@ -76,7 +76,7 @@ jobs:
       - name: test cython
         shell: bash
         run: |
-          cd cython
+          cd cy
           python -m pip install -U pip setuptools wheel
           # python setup.py build_ext -i  # pypy should be faster with pure python
           python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.backend }} -j7
