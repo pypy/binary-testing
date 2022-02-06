@@ -73,6 +73,11 @@ jobs:
         if : ${{ matrix.os == 'ubuntu-latest' }}
         run: python -m pip install numpy pythran
 
+      - name: Enable long paths on Windows
+        if: startsWith(runner.os, 'Windows')
+        run: Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -Value 1
+        shell: pwsh
+
       - name: test cython
         shell: bash
         run: |
