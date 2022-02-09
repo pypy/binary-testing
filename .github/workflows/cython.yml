@@ -67,16 +67,21 @@ jobs:
         with:
           fetch-depth: 1
           repository: cython/cython
-          path: cython
+          path: cy
 
       - name: install external dependencies
         if : ${{ matrix.os == 'ubuntu-latest' }}
         run: python -m pip install numpy pythran
 
+      - name: Enable long paths on Windows
+        if: startsWith(runner.os, 'Windows')
+        run: Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem -Name LongPathsEnabled -Value 1
+        shell: pwsh
+
       - name: test cython
         shell: bash
         run: |
-          cd cython
-          python -m pip install -U pip "setuptools<60" wheel
+          cd cy
+          python -m pip install -U pip setuptools wheel
           # python setup.py build_ext -i  # pypy should be faster with pure python
           python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.backend }} -j7
