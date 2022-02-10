@@ -26,12 +26,12 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   cython:
-    name: Test on ${{ matrix.os }} ${{ matrix.backend }} ${{ matrix.extra_cflags }}
-    runs-on: ${{ matrix.os }}
+    name: Test ${{ matrix.python_version }} ${{ matrix.os }} ${{ matrix.extra_cflags }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu, windows, macOS]
         backend: [c]
         python_version: [pypy-3.8-nightly, pypy-3.9-nightly]
         extra_cflags: ['', '-DCYTHON_USE_TYPE_SPECS=1']
@@ -46,7 +46,6 @@ jobs:
     timeout-minutes: 60
     env:
       BACKEND: ${{ matrix.backend }}
-      OS_NAME: ${{ matrix.os }}
       PYTHON_VERSION: ${{ matrix.python_version }}
       USE_CCACHE: 1
       CCACHE_SLOPPINESS: "pch_defines,time_macros"
@@ -82,6 +81,6 @@ jobs:
         shell: bash
         run: |
           cd cy
-          python -m pip install -U pip setuptools wheel
+          python -m pip install -U pip "setuptools<60" wheel
           # python setup.py build_ext -i  # pypy should be faster with pure python
           python runtests.py -vv --no-code-style -x Debugger --backends=${{ matrix.backend }} -j7
