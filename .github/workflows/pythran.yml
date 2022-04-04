@@ -44,6 +44,7 @@ jobs:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
         path: pythran
+        ref: fix/distutils-test
 
     - name: Install dependencies
       run: |
