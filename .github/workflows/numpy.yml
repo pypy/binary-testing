@@ -45,4 +45,4 @@ jobs:
         python -m pip install git+https://github.com/numpy/numpy
     - name: Testing NumPy
       run: |
-        python -c "import numpy; numpy.test(verbose=3)"
+        python -c "import numpy; numpy.test('full', verbose=3)"
