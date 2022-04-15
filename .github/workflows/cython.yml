@@ -43,7 +43,7 @@ jobs:
           - os: macOS
             cflags: '-O0 -g3'
 
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       BACKEND: ${{ matrix.backend }}
       PYTHON_VERSION: ${{ matrix.python_version }}
@@ -58,6 +58,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
+        # Nothing needed, this repo is quite empty
+
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python_version }}
@@ -65,7 +67,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
-          repository: cython/cython
+          repository: mattip/cython
+          ref: enable-CYTHON_USE_PYTYPE_LOOKUP
           path: cy
 
       - name: install external dependencies
