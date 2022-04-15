@@ -50,7 +50,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install ipython nbval pytest-xdist wheel
-        pip install git+https://github.com/cython/cython@54546b9019b9540cbcb031da8291a561847222e4
+        pip install git+https://github.com/cython/cython@5db0e66d5bb26f6cf4030b4f8a6a5c6304a7b508u
         sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
     - name: Setup
       run: |
