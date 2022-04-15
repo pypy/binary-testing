@@ -34,8 +34,7 @@ jobs:
     timeout-minutes: 160
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python_version }}
 
@@ -44,7 +43,6 @@ jobs:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
         path: pythran
-        ref: e7ff96d81b35243a13e6917f2c6f2fc3bd0aa263
 
     - name: Install dependencies
       run: |
