@@ -44,6 +44,7 @@ jobs:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
         path: pythran
+        ref: e7ff96d81b35243a13e6917f2c6f2fc3bd0aa263
 
     - name: Install dependencies
       run: |
@@ -51,7 +52,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install ipython nbval pytest-xdist wheel
-        pip install git+https://github.com/cython/cython
+        pip install git+https://github.com/cython/cython@18eb280aa2488ba14889538e157281b4175da25b
         sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
     - name: Setup
       run: |
