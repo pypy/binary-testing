@@ -26,7 +26,7 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   cython:
-    name: Test ${{ matrix.python_version }} ${{ matrix.os }} ${{ matrix.extra_cflags }}
+    name: Cython ${{ matrix.python_version }} ${{ matrix.os }} ${{ matrix.extra_cflags }}
     runs-on: ${{ matrix.os }}-latest
     strategy:
       fail-fast: false
