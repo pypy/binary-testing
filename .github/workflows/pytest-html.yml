@@ -27,31 +27,25 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            name: py38-ubuntu
-            python-version: 3.8
-
-          - os: windows-latest
-            name: py38-windows
-            python-version: 3.8
-
-          - os: ubuntu-latest
             name: pypy3-ubuntu
-            python-version: pypy3.8-nightly
+            python-version: pypy-3.8
 
           - os: windows-latest
             name: pypy3-windows
-            python-version: pypy3.8
+            python-version: pypy-3.8
+
+          - os: ubuntu-latest
+            name: pypy3-nightly-ubuntu
+            python-version: pypy-3.8-nightly
+
+          - os: windows-latest
+            name: pypy3-nightly-windows
+            python-version: pypy-3.8-nightly
 
     steps:
-      - name: Set Newline Behavior
-        run : git config --global core.autocrlf false
-      - uses: actions/checkout@v3
-
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 1
           repository: pytest-dev/pytest-html
-          path: repo
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -69,5 +63,6 @@ jobs:
           split-by: '-'
 
       - name: Test with tox
-        run: cd repo && python -m tox -e ${{ steps.split-matrix-name.outputs._0}}-cov
+        run: |
+          python -m tox -e ${{ steps.split-matrix-name.outputs._0}}-cov
 
