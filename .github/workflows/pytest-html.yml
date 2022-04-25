@@ -64,5 +64,6 @@ jobs:
 
       - name: Test with tox
         run: |
+          ls .
           python -m tox -e ${{ steps.split-matrix-name.outputs._0}}-cov
 
