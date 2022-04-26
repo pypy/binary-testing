@@ -64,6 +64,7 @@ jobs:
 
       - name: Test with tox
         run: |
+          echo PWD $PWD
           mkdir -p .tox/dist
           python -m tox -e ${{ steps.split-matrix-name.outputs._0}}-cov
 
