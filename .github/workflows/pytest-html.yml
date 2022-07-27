@@ -21,8 +21,7 @@ on:
 
 jobs:
   test_python:
-    name: pytest-html ${{ matrix. }}
-    name: pytest-html ${{ matrix.name }}
+    name: pytest-html ${{ matrix.name }} ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
