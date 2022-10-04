@@ -57,7 +57,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        repository: pytest-dev/pytest-html
+        repository: pybind/pybind11
 
     - name: Setup Python ${{ matrix.python }}
       uses: actions/setup-python@v4
