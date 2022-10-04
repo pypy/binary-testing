@@ -29,7 +29,7 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
         cpp-version: [g++-5, clang-5.0]
-        python_version: ["3.8", pypy-3.8-nightly, pypy-3.9-nightly]
+        python_version: [pypy-3.8-nightly, pypy-3.9-nightly]
 
     timeout-minutes: 160
 
