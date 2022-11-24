@@ -36,17 +36,21 @@ jobs:
             python-version: pypy-3.8-nightly
 
     steps:
+      - name: Set Newline Behavior
+        run : git config --global core.autocrlf false
+
       - uses: actions/checkout@v3
         with:
           repository: pytest-dev/pytest-html
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix['python-version'] }}
 
       - name: Install tox
-        run: python -m pip install --upgrade pip tox wheel "setuptools==56.0"
+        run: python -m pip install --upgrade pip tox
 
       - name: Get Tox Environment Name From Matrix Name
         uses: rishabhgupta/split-by@v1
@@ -57,7 +61,4 @@ jobs:
 
       - name: Test with tox
         run: |
-          echo PWD $PWD
-          mkdir -p .tox/dist
-          python -m tox -e ${{ steps.split-matrix-name.outputs._0}}-cov
-
+          python -m tox -e ${{ steps.split-matrix-name.outputs._0}}
