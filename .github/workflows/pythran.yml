@@ -22,22 +22,27 @@ on:
 
 jobs:
   pythran-linux:
-    name: Test ${{ matrix.os }} ${{ matrix.python_version }}
+    name: Test ubuntu ${{ matrix.python_version[1] }} ${{ matrix.cpp-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-18.04]
         cpp-version: [g++-5, clang-5.0]
-        python_version: [pypy-3.8-nightly, pypy-3.9-nightly]
+        python_version:
+          - [pypy-3.8-nightly, pypy38]
+          - [pypy-3.9-nightly, pypy39]
+
+
 
     timeout-minutes: 160
 
     steps:
     - uses: actions/checkout@v2
+
     - uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python_version }}
+        python-version: ${{ matrix.python_version[0] }}
 
     - uses: actions/checkout@v2
       with:
@@ -64,8 +69,10 @@ jobs:
         export CC=`echo ${{ matrix.cpp-version }} | sed -e 's/g++/gcc/'`
         export CXX=`echo ${{ matrix.cpp-version }} | sed -e 's/clang/clang++/'`
         pytest pythran/tests/test_*.py -v --numprocesses=auto $PYTEST_ARGS
+
   pythran-windows:
     runs-on: windows-latest
+    name: windows pypy3.8 clang
     strategy:
       matrix:
           architectures: [x64]
