@@ -1,14 +1,11 @@
 name: pybind11
 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    paths:
+      - '.github/workflows/pybind11.yml'
 
   schedule:
   #        ┌───────────── minute (0 - 59)
