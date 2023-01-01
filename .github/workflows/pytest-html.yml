@@ -21,18 +21,20 @@ on:
 
 jobs:
   test_python:
-    name: pytest-html ${{ matrix.name }} ${{ matrix.python-version }}
+    name: pytest-html ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            name: pypy3-nightly-ubuntu
+            name: pypy3.8-nightly-ubuntu
+            toxname: pypy3
             python-version: pypy-3.8-nightly
 
           - os: windows-latest
-            name: pypy3-nightly-windows
+            name: pypy3.8-nightly-windows
+            toxname: pypy3
             python-version: pypy-3.8-nightly
 
     steps:
@@ -52,13 +54,6 @@ jobs:
       - name: Install tox
         run: python -m pip install --upgrade pip tox
 
-      - name: Get Tox Environment Name From Matrix Name
-        uses: rishabhgupta/split-by@v1
-        id: split-matrix-name
-        with:
-          string: '${{ matrix.name }}'
-          split-by: '-'
-
       - name: Test with tox
         run: |
-          python -m tox -e ${{ steps.split-matrix-name.outputs._0}}
+          python -m tox -e ${{ matrix.toxname }}

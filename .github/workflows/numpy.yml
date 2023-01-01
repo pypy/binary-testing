@@ -33,16 +33,25 @@ jobs:
     timeout-minutes: 90
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+      with:
+        repository: numpy/numpy
+        path: repo
+        submodules: recursive
+        fetch-depth: 0
+
     - uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python_version }}
 
     - name: Install NumPy
       run: |
+        set -xeo pipefail
+        cd repo
         python -m pip install --upgrade pip
-        python -m pip install hypothesis pytest
-        python -m pip install git+https://github.com/numpy/numpy
-    - name: Testing NumPy
-      run: |
-        python -c "import numpy; numpy.test('full', verbose=3)"
+        python -m pip install -r test_requirements.txt
+        python -m pip install .
+        # change out of the repo directory so we can import numpy cleanly
+        mkdir -p ../test
+        cd ../test
+        python -c "import numpy, sys; sys.exit(not numpy.test('full', verbose=3))"
