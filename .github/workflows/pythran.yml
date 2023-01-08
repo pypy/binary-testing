@@ -35,13 +35,13 @@ jobs:
     timeout-minutes: 160
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python_version[0] }}
 
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
@@ -74,9 +74,9 @@ jobs:
       matrix:
           architectures: [x64]
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: pypy-3.8-nightly
         architecture: ${{ matrix.architecture }}
@@ -84,7 +84,7 @@ jobs:
       run: |
         choco install llvm --yes
         @("C:/Program Files/LLVM/bin") +  (Get-Content $env:GITHUB_PATH) | Set-Content $env:GITHUB_PATH
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
