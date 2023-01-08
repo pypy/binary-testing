@@ -41,6 +41,11 @@ jobs:
       with:
         python-version: ${{ matrix.python_version }}
 
+    - name: Show compiler version
+      run |
+        gcc --version
+      if: matrix.os == "macos-latest" || matrix.os == "ubuntu-latest"
+
     - name: Install NumPy
       run: |
         cd repo
