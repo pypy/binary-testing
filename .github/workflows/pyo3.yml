@@ -30,23 +30,21 @@ jobs:
     timeout-minutes: 20
 
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python_version }}
 
     - name: Checkout PyO3
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: PyO3/pyo3
         path: pyo3
 
     - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        profile: minimal
-        default: true
         # needed to correctly format errors, see #1865
         components: rust-src
 
