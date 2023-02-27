@@ -25,14 +25,14 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            name: pypy3.8-nightly-ubuntu
+            name: pypy3.10-nightly-ubuntu
             toxname: pypy3
-            python-version: pypy-3.8-nightly
+            python-version: pypy-3.10-nightly
 
           - os: windows-latest
-            name: pypy3.8-nightly-windows
+            name: pypy3.9-nightly-windows
             toxname: pypy3
-            python-version: pypy-3.8-nightly
+            python-version: pypy-3.9-nightly
 
     steps:
       - name: Set Newline Behavior
