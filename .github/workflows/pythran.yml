@@ -27,7 +27,7 @@ jobs:
         os: [ubuntu-18.04]
         cpp-version: [g++-5, clang-5.0]
         python_version:
-          - [pypy-3.8-nightly, pypy38]
+          - [pypy-3.10-nightly, pypy10]
           - [pypy-3.9-nightly, pypy39]
 
 

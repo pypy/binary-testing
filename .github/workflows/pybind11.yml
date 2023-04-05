@@ -34,7 +34,7 @@ jobs:
       matrix:
         runs-on: [ubuntu-latest, windows-2022, macos-latest]
         python:
-        - 'pypy-3.8-nightly'
+        - 'pypy-3.10-nightly'
         - 'pypy-3.9-nightly'
 
         # Items in here will either be added to the build matrix (if not
@@ -44,7 +44,7 @@ jobs:
         # We support an optional key: args, for cmake args
         include:
           - runs-on: ubuntu-latest
-            python: 'pypy-3.8-nightly'
+            python: 'pypy-3.9-nightly'
             args: >
               -DPYBIND11_FINDPYTHON=ON
 

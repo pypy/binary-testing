@@ -30,7 +30,7 @@ jobs:
       matrix:
         os: [ubuntu, windows, macOS]
         backend: [c]
-        python_version: [pypy-3.8-nightly, pypy-3.9-nightly]
+        python_version: [pypy-3.10-nightly, pypy-3.9-nightly]
         extra_cflags: ['', '-DCYTHON_USE_TYPE_SPECS=1']
         include:
           - os: windows
