@@ -24,8 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04]
-        cpp-version: [g++-5, clang-5.0]
+        os: [ubuntu-20.04]
+        cpp-version: [g++-8, clang-8.0]
         python_version:
           - [pypy-3.10-nightly, pypy10]
           - [pypy-3.9-nightly, pypy39]
@@ -35,8 +35,6 @@ jobs:
     timeout-minutes: 160
 
     steps:
-    - uses: actions/checkout@v3
-
     - uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python_version[0] }}
@@ -52,14 +50,14 @@ jobs:
         cd pythran
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install ipython nbval pytest-xdist wheel
-        pip install git+https://github.com/cython/cython
+        pip install ipython nbval pytest-xdist cython wheel
         sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
     - name: Setup
       run: |
         cd pythran
         python setup.py install
-        printf '[commpiler]\nblas=openblas\n' > ~/.pythranrc
+        printf '[commpiler]\nblas=openblas\n' > ~/.config/.pythranrc
+        printf 'cflags=-std=c++11 -Wall -Werror -Wno-unknown-pragmas -Wno-unused-local-typedefs -Wno-cpp -Wno-deprecated-declarations -Wno-absolute-value\n' >> ~/.config/.pythranrc
     - name: Testing sequential
       run: |
         cd pythran
@@ -78,7 +76,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: pypy-3.8-nightly
+        python-version: pypy-3.10-nightly
         architecture: ${{ matrix.architecture }}
     - name: Install clang-cl
       run: |
