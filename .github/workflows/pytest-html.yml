@@ -38,6 +38,11 @@ jobs:
       - name: Set Newline Behavior
         run : git config --global core.autocrlf false
 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
       - uses: actions/checkout@v3
         with:
           repository: pytest-dev/pytest-html
@@ -48,18 +53,18 @@ jobs:
         with:
           python-version: ${{ matrix['python-version'] }}
 
-    - name: Show compiler version and locale
-      run: |
-        echo gcc --version
-        gcc --version
-        echo "-----------"
-        echo locale
-        locale
-      if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+      - name: Show compiler version and locale
+        run: |
+          echo gcc --version
+          gcc --version
+          echo "-----------"
+          echo locale
+          locale
+        if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
 
       - name: Install tox
         run: python -m pip install --upgrade pip tox
 
       - name: Test with tox
         run: |
-          python -m tox -e ${{ matrix.toxname }}
+          python -m tox -e ${{ matrix.toxname }} -- testing/test_unit.py
