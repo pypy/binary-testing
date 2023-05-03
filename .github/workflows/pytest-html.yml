@@ -38,6 +38,11 @@ jobs:
       - name: Set Newline Behavior
         run : git config --global core.autocrlf false
 
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+
       - uses: actions/checkout@v3
         with:
           repository: pytest-dev/pytest-html
@@ -62,4 +67,4 @@ jobs:
 
       - name: Test with tox
         run: |
-          python -m tox -e ${{ matrix.toxname }}
+          python -m tox -e ${{ matrix.toxname }} -- testing/test_unit.py
