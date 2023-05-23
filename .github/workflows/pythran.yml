@@ -96,6 +96,7 @@ jobs:
         pip install -r requirements.txt
         pip install wheel pythran-openblas pytest pytest-timeout
         pip install git+https://github.com/cython/cython
+        pip install git+https://github.com/numpy/numpy
         # pip install scipy  # no wheel availabe, compilation takes too long
     - name: Setup
       run: |
