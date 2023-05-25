@@ -55,7 +55,6 @@ jobs:
         cd repo
         python -m pip install --upgrade pip
         python -m pip install -r test_requirements.txt
-        pip install git+https://github.com/cython/cython
         python -m pip install .
         # change out of the repo directory so we can import numpy cleanly
         mkdir -p ../test
