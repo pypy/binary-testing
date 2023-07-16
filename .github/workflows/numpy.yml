@@ -54,8 +54,9 @@ jobs:
       run: |
         cd repo
         python -m pip install --upgrade pip
+        python -m pip install ninja
         python -m pip install -r test_requirements.txt
-        python -m pip install .
+        python -m pip install . --config-settings=setup-args="--vsenv"
         # change out of the repo directory so we can import numpy cleanly
         mkdir -p ../test
         cd ../test

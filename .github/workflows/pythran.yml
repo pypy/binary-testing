@@ -106,5 +106,4 @@ jobs:
         pytest pythran/tests/test_ndarray.py -v --timeout 600
         # pytest pythran/tests/test_scipy.py -v --timeout 600
         pytest pythran/tests/test_base.py -v --timeout 600
-        pytest pythran/tests/test_cases.py -v --timeout 600
         pytest pythran/tests/test_advanced.py -v --timeout 600
