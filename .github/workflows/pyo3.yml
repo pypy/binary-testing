@@ -86,4 +86,6 @@ jobs:
       shell: bash
       run: |
         cd pyo3
-        cargo xtask test-py
+        nox -s test-py
+      env:
+        CARGO_TARGET_DIR: ${{ github.workspace }}/pyo3/target
