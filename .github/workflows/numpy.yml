@@ -59,30 +59,26 @@ jobs:
         install_gfortran
       if: matrix.os == 'macos-latest'
 
-    - name: Install requirements (windows)
+    - name: Install requirements and numpy (windows)
       shell: powershell
       run: |
         cd repo
         $ErrorActionPreference = "Stop"
         # choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
-        choco install -y --no-progress unzip
-        choco install -y --no-progress --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
+        # choco install -y --no-progress unzip
+        # choco install -y --no-progress --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
         echo "RTOOLS43_HOME=c:\rtools43" >> $env:GITHUB_ENV
 
-        mkdir  C:/opt/openblas/openblas_dll
-        mkdir  C:/opt/32/lib/pkgconfig
-        mkdir  C:/opt/64/lib/pkgconfig
-        $target=$(python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); target=f'openblas_{plat}.zip'; obs.download_openblas(target, plat, ilp64);print(target)")
-        unzip -o -d c:/opt/ $target
-        echo "PKG_CONFIG_PATH=c:\opt\64\lib\pkgconfig" >> $env:GITHUB_ENV
-        copy C:/opt/64/bin/*.dll C:/opt/openblas/openblas_dll
+        # mkdir  C:/opt/openblas/openblas_dll
+        # mkdir  C:/opt/32/lib/pkgconfig
+        # mkdir  C:/opt/64/lib/pkgconfig
+        # $target=$(python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); target=f'openblas_{plat}.zip'; obs.download_openblas(target, plat, ilp64);print(target)")
+        # unzip -o -d c:/opt/ $target
+        # echo "PKG_CONFIG_PATH=c:\opt\64\lib\pkgconfig" >> $env:GITHUB_ENV
+        # copy C:/opt/64/bin/*.dll C:/opt/openblas/openblas_dll
 
-        #python -c "from tools import openblas_support; openblas_support.make_init('numpy')"
-        echo "# Created by .github/workflows/numpy.yml" > numpy/_distributor_init.py
-        echo "import os" >> numpy/_distributor_init.py
-        echo "basedir = os.path.dirname(__file__)" >> numpy/_distributor_init.py
-        echo "libs_dir = os.path.abspath(os.path.join(basedir, '.libs'))" >> numpy/_distributor_init.py
-        echo "os.add_dll_directory(libs_dir)" >> numpy/_distributor_init.py
+        # Unfortunately all this doesn't work, so build without openblas
+        python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Dblas=none" -Csetup-args="-Dlapack=none" -Csetup-args="-Dallow-noblas=true"
       if: matrix.os == 'windows-latest'
 
     - name: Install NumPy
@@ -92,6 +88,7 @@ jobs:
         python -m pip install ninja
         python -m pip install -r test_requirements.txt
         python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Duse-ilp64=true" -Csetup-args="-Dblas-symbol-suffix=64_"
+      if: matrix.os != 'windows-latest'
 
     - name: 'Copy OpenBLAS DLL to site-packages'
       shell: powershell
