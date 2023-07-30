@@ -47,7 +47,7 @@ jobs:
     - name: Install OpenBLAS
       run: |
         basedir=$(python tools/openblas_support.py)
-        PKG_CONFIG_PATH=${basedir}/lib/pkgconfig
+        echo "PKG_CONFIG_PATH=${basedir}/lib/pkgconfig" >> $GITHUB_ENV
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
 
     - name: Install requirements
