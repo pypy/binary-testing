@@ -77,7 +77,12 @@ jobs:
         echo "PKG_CONFIG_PATH=c:\opt\64\lib\pkgconfig" >> $env:GITHUB_ENV
         copy C:/opt/64/bin/*.dll C:/opt/openblas/openblas_dll
 
-        python -c "from tools import openblas_support; openblas_support.make_init('numpy')"
+        #python -c "from tools import openblas_support; openblas_support.make_init('numpy')"
+        echo "# Created by .github/workflows/numpy.yml" > numpy/_distributor_init.py
+        echo "import os" >> numpy/_distributor_init.py
+        echo "basedir = os.path.dirname(__file__)" >> numpy/_distributor_init.py
+        echo "libs_dir = os.path.abspath(os.path.join(basedir, '.libs'))" >> numpy/_distributor_init.py
+        echo "os.add_dll_directory(libs_dir)" >> numpy/_distributor_init.py
       if: matrix.os == 'windows-latest'
 
     - name: Install NumPy
@@ -105,6 +110,8 @@ jobs:
 
 
     - name: Test
+      shell: bash
       run: |
-        # do not cd into the repo directory so we can import numpy cleanly
-        pytest --pyargs numpy -rsx 
+        # do not cd into the repo directory so we can import numpy
+        cp repo/pytest.ini . 
+        pytest --pyargs numpy -raw
