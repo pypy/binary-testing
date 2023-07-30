@@ -46,6 +46,7 @@ jobs:
 
     - name: Install OpenBLAS
       run: |
+        cd repo
         basedir=$(python tools/openblas_support.py)
         echo "PKG_CONFIG_PATH=${basedir}/lib/pkgconfig" >> $GITHUB_ENV
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
@@ -53,6 +54,7 @@ jobs:
     - name: Install requirements
       shell: powershell
       run: |
+        cd repo
         $ErrorActionPreference = "Stop"
         choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
         choco install unzip -y
