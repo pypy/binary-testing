@@ -111,4 +111,5 @@ jobs:
       run: |
         # do not cd into the repo directory so we can import numpy
         cp repo/pytest.ini . 
-        pytest --pyargs numpy -raw
+        export LIBRARY_PATH="$LIBRARY_PATH:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
+        pytest --pyargs numpy -rsx
