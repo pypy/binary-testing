@@ -47,7 +47,7 @@ jobs:
     - name: Install OpenBLAS
       run: |
         cd repo
-        python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); print(f'{plat=},{ilp64=}')")
+        python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); print(f'{plat=},{ilp64=}')"
         basedir=$(python tools/openblas_support.py)
         ls $basedir/lib
         echo "PKG_CONFIG_PATH=${basedir}/lib/pkgconfig" >> $GITHUB_ENV
