@@ -51,7 +51,8 @@ jobs:
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
 
     - name: Install requirements
-      powershell: |
+      shell: powershell
+      run: |
         $ErrorActionPreference = "Stop"
         choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
         choco install unzip -y
@@ -78,14 +79,15 @@ jobs:
         python -m pip install -r test_requirements.txt
         python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Duse-ilp64=true" -Csetup-args="-Dblas-symbol-suffix=64_"
 
-    - powershell: |
+    - name: 'Copy OpenBLAS DLL to site-packages'
+      shell: powershell
+      run: |
         # copy from c:/opt/openblas/openblas_dll to numpy/.libs to ensure it can
         # get loaded when numpy is imported (no RPATH on Windows)
         $target = $(python -c "import sysconfig; print(sysconfig.get_path('platlib'))")
         mkdir $target/numpy/.libs
         echo "target is $target"
         copy C:/opt/openblas/openblas_dll/*.dll $target/numpy/.libs
-      name: 'Copy OpenBLAS DLL to site-packages'
       if: matrix.os == 'windows-latest'
 
 
