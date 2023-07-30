@@ -103,7 +103,8 @@ jobs:
         ls -Path $target/numpy/.libs
         echo "contents of _distributor_init.py"
         type repo/numpy/_distributor_init.py
-      if: matrix.os == 'windows-latest'
+      # Disable this step
+      if: matrix.os == 'wwwwindows-latest'
 
 
     - name: Test
