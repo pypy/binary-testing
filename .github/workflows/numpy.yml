@@ -44,16 +44,16 @@ jobs:
       with:
         python-version: ${{ matrix.python_version }}
 
-    - name: Install OpenBLAS
+    - name: Install OpenBLAS (linux, macOS)
       run: |
         cd repo
         python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); print(f'{plat=},{ilp64=}')"
         basedir=$(python tools/openblas_support.py)
-        ls $basedir/lib
-        echo "PKG_CONFIG_PATH=${basedir}/lib/pkgconfig" >> $GITHUB_ENV
+        sudo cp -r $basedir/lib/* /usr/local/lib
+        sudo cp $basedir/include/* /usr/local/include
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
 
-    - name: Install requirements
+    - name: Install requirements (windows)
       shell: powershell
       run: |
         cd repo
@@ -92,6 +92,10 @@ jobs:
         mkdir $target/numpy/.libs
         echo "target is $target"
         copy C:/opt/openblas/openblas_dll/*.dll $target/numpy/.libs
+        echo "contents of target"
+        ls -Path $target/numpy/.libs
+        echo "contents of _distributor_init.py"
+        type repo/numpy/_distributor_init.py
       if: matrix.os == 'windows-latest'
 
 
