@@ -53,15 +53,20 @@ jobs:
         sudo cp $basedir/include/* /usr/local/include
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
 
+    - name: Install gfortran (macOS)
+      run: |
+        source repo/tools/wheels/gfortran_utils.sh
+        install_gfortran
+      if: matrix.os == 'macos-latest'
+
     - name: Install requirements (windows)
       shell: powershell
       run: |
         cd repo
         $ErrorActionPreference = "Stop"
-        choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
-        choco install unzip -y
-        choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
-        choco install ninja
+        # choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
+        choco install -y --no-progress unzip
+        choco install -y --no-progress --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
         echo "RTOOLS43_HOME=c:\rtools43" >> $env:GITHUB_ENV
 
         mkdir  C:/opt/openblas/openblas_dll
