@@ -78,6 +78,9 @@ jobs:
         # copy C:/opt/64/bin/*.dll C:/opt/openblas/openblas_dll
 
         # Unfortunately all this doesn't work, so build without openblas
+        python -m pip install --upgrade pip
+        python -m pip install ninja
+        python -m pip install -r test_requirements.txt
         python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Dblas=none" -Csetup-args="-Dlapack=none" -Csetup-args="-Dallow-noblas=true"
       if: matrix.os == 'windows-latest'
 
