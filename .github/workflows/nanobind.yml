@@ -63,15 +63,16 @@ jobs:
     - name: Update CMake
       uses: jwlawson/actions-setup-cmake@v1.13
 
+    - name: Install pytest
+      run: python -m pip install pytest
+
     - name: Setup annotations on Linux
       if: runner.os == 'Linux'
       run: python -m pip install pytest-github-actions-annotate-failures
 
-    # First build - C++11 mode and inplace
-    - name: Configure C++11 ${{ matrix.args }}
+    - name: Configure ${{ matrix.args }}
       run: >
-        cmake -S . -B .
-        ${{ matrix.args }}
+        cmake -S . -B . ${{ matrix.args }}
 
     - name: Build
       run: cmake --build . -j 2
