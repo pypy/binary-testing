@@ -1,0 +1,83 @@
+name: nanobind
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/nanobind.yml'
+
+  schedule:
+  #        ┌───────────── minute (0 - 59)
+  #        │ ┌───────────── hour (0 - 23)
+  #        │ │ ┌───────────── day of the month (1 - 31)
+  #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #        │ │ │ │ │
+  - cron: "0 2 * * 0"
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PIP_ONLY_BINARY: numpy
+  FORCE_COLOR: 3
+  PYTEST_TIMEOUT: 300
+
+jobs:
+  # This is the "main" test suite, which tests a large number of different
+  # versions of default compilers and Python versions in GitHub Actions.
+  standard:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on: [ubuntu-latest, windows-2022, macos-latest]
+        python:
+        - 'pypy-3.10-nightly'
+        - 'pypy-3.9-nightly'
+
+        # Items in here will either be added to the build matrix (if not
+        # present), or add new keys to an existing matrix element if all the
+        # existing keys match.
+        #
+        # We support an optional key: args, for cmake args
+        include:
+          - runs-on: ubuntu-latest
+            python: 'pypy-3.9-nightly'
+
+    name: "nanobind ${{ matrix.python }} • ${{ matrix.runs-on }} x64 ${{ matrix.args }}"
+    runs-on: ${{ matrix.runs-on }}
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        repository: wjakob/nanobind
+        submodules: recursive
+
+    - name: Setup Python ${{ matrix.python }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Update CMake
+      uses: jwlawson/actions-setup-cmake@v1.13
+
+    - name: Install pytest
+      run: python -m pip install pytest
+
+    - name: Setup annotations on Linux
+      if: runner.os == 'Linux'
+      run: python -m pip install pytest-github-actions-annotate-failures
+
+    - name: Configure ${{ matrix.args }}
+      run: >
+        cmake -S . -B build ${{ matrix.args }}
+
+    - name: Build
+      run: cmake --build build -j 2
+
+    - name: Run tests
+      run: >
+        cd build;
+        python -m pytest
