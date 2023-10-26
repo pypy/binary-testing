@@ -89,6 +89,8 @@ jobs:
       run: |
         cd pythran
         python -m pip install --upgrade pip
+        python -m pip install cython
+        python -m pip install numpy --no-build-isolation -Csetup-args="-Dallow-noblase=true"
         pip install -r requirements.txt -Csetup-args="--vsenv" -Csetup-args="-Dblas=none" -Csetup-args="-Dlapack=none" -Csetup-args="-Dallow-noblas=true"
         pip install wheel pythran-openblas pytest pytest-timeout
         # pip install scipy  # no wheel availabe, compilation takes too long
