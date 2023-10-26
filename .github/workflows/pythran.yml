@@ -21,6 +21,7 @@ jobs:
   pythran-linux:
     name: Test ubuntu ${{ matrix.python_version[1] }} ${{ matrix.cpp-version }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 160
     strategy:
       fail-fast: false
       matrix:
@@ -29,11 +30,6 @@ jobs:
         python_version:
           - [pypy-3.10-nightly, pypy10]
           - [pypy-3.9-nightly, pypy39]
-
-
-
-    timeout-minutes: 160
-
     steps:
     - uses: actions/setup-python@v4
       with:
@@ -49,6 +45,7 @@ jobs:
       run: |
         cd pythran
         python -m pip install --upgrade pip
+        python -m pip install numpy -Csetup-args="-Dallow-noblas=true"
         pip install -r requirements.txt
         pip install ipython nbval pytest-xdist wheel
         sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
