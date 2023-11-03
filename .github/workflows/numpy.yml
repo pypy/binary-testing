@@ -44,71 +44,24 @@ jobs:
       with:
         python-version: ${{ matrix.python_version }}
 
-    - name: Install OpenBLAS (linux, macOS)
-      run: |
-        cd repo
-        python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); print(f'{plat=},{ilp64=}')"
-        basedir=$(python tools/openblas_support.py)
-        sudo cp -r $basedir/lib/* /usr/local/lib
-        sudo cp $basedir/include/* /usr/local/include
-      if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
-
     - name: Install gfortran (macOS)
       run: |
         source repo/tools/wheels/gfortran_utils.sh
         install_gfortran
       if: matrix.os == 'macos-latest'
 
-    - name: Install requirements and numpy (windows)
-      shell: powershell
+    - name: Install dependencies and scipy-openblas
       run: |
         cd repo
-        $ErrorActionPreference = "Stop"
-        # choco install --confirm --no-progress --allow-downgrade rtools --version=4.3.5550
-        # choco install -y --no-progress unzip
-        # choco install -y --no-progress --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
-        echo "RTOOLS43_HOME=c:\rtools43" >> $env:GITHUB_ENV
-
-        # mkdir  C:/opt/openblas/openblas_dll
-        # mkdir  C:/opt/32/lib/pkgconfig
-        # mkdir  C:/opt/64/lib/pkgconfig
-        # $target=$(python -c "import tools.openblas_support as obs; plat=obs.get_plat(); ilp64=obs.get_ilp64(); target=f'openblas_{plat}.zip'; obs.download_openblas(target, plat, ilp64);print(target)")
-        # unzip -o -d c:/opt/ $target
-        # echo "PKG_CONFIG_PATH=c:\opt\64\lib\pkgconfig" >> $env:GITHUB_ENV
-        # copy C:/opt/64/bin/*.dll C:/opt/openblas/openblas_dll
-
-        # Unfortunately all this doesn't work, so build without openblas
         python -m pip install --upgrade pip
         python -m pip install ninja
-        python -m pip install -r test_requirements.txt
-        python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Dblas=none" -Csetup-args="-Dlapack=none" -Csetup-args="-Dallow-noblas=true"
-      if: matrix.os == 'windows-latest'
+        python -m pip install -r test_requirements.txt spin scipy-openblas32
+        spin config-openblas --with-scipy-openblas=32
 
     - name: Install NumPy
       run: |
         cd repo
-        python -m pip install --upgrade pip
-        python -m pip install ninja
-        python -m pip install -r test_requirements.txt
-        python -m pip install . -v -Csetup-args="--vsenv" -Csetup-args="-Duse-ilp64=true" -Csetup-args="-Dblas-symbol-suffix=64_"
-      if: matrix.os != 'windows-latest'
-
-    - name: 'Copy OpenBLAS DLL to site-packages'
-      shell: powershell
-      run: |
-        # copy from c:/opt/openblas/openblas_dll to numpy/.libs to ensure it can
-        # get loaded when numpy is imported (no RPATH on Windows)
-        $target = $(python -c "import sysconfig; print(sysconfig.get_path('platlib'))")
-        mkdir $target/numpy/.libs
-        echo "target is $target"
-        copy C:/opt/openblas/openblas_dll/*.dll $target/numpy/.libs
-        echo "contents of target"
-        ls -Path $target/numpy/.libs
-        echo "contents of _distributor_init.py"
-        type repo/numpy/_distributor_init.py
-      # Disable this step
-      if: matrix.os == 'wwwwindows-latest'
-
+        python -m pip install . -v -Csetup-args="--vsenv"
 
     - name: Test
       shell: bash
