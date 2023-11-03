@@ -23,7 +23,6 @@ jobs:
     env:
       BITS: 64
       NPY_USE_BLAS_ILP64: '1'
-      PKG_CONFIG_PATH: ${{ github.workspace }}/repo/.openblas
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -60,8 +59,11 @@ jobs:
         spin config-openblas --with-scipy-openblas=32
 
     - name: Install NumPy
+      env:
+        PKG_CONFIG_PATH: ${{ github.workspace }}/repo/.openblas
       run: |
         cd repo
+        python -c "import os; print('PKG_CONFIG_PATH', os.environ['PKG_CONFIG_PATH'])"
         python -m pip install . -v -Csetup-args="--vsenv"
 
     - name: Test
