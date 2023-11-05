@@ -1,5 +1,9 @@
 name: pytest-html
 
+# This was added to record timing from the pytest-json-report extension, in an
+# attempt to figure out why coverage is so slow on PyPy
+# See https://github.com/pytest-dev/pytest-html/pull/518
+
 on:
   workflow_dispatch:
   pull_request:
