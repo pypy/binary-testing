@@ -50,11 +50,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5.0.0
         with:
           python-version: ${{ matrix.python_version }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 1
           repository: cython/cython

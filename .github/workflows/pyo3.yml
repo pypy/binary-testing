@@ -30,13 +30,13 @@ jobs:
     timeout-minutes: 20
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v4.1.1
+    - uses: actions/setup-python@v5.0.0
       with:
         python-version: ${{ matrix.python_version }}
 
     - name: Checkout PyO3
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4.1.1
       with:
         repository: PyO3/pyo3
         path: pyo3

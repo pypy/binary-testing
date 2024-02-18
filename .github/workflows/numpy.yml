@@ -33,7 +33,7 @@ jobs:
     timeout-minutes: 120
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4.1.1
       with:
         repository: numpy/numpy
         path: repo
@@ -45,7 +45,7 @@ jobs:
         choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
       if: matrix.os == 'windows-latest'
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5.0.0
       with:
         python-version: ${{ matrix.python_version }}
 
