@@ -36,7 +36,7 @@ jobs:
           - os: windows-latest
             name: pypy3.9-nightly-windows
             toxname: pypy3
-            python-version: pypy-3.9-nightly
+            python-version: pypy-3.11-nightly
 
     steps:
       - name: Set Newline Behavior
