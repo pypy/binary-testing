@@ -24,10 +24,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'ubuntu-latest', 'ubuntu-latest', 'ubuntu-latest']
+        os: ['ubuntu-latest']
         python: ['pypy-3.11-nightly', 'pypy-3.10-nightly']
 
-    name: "Python ${{ matrix.python }} / ${{ matrix.os }}"
+    name: "${{ matrix.python }} / ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
 
     steps:
