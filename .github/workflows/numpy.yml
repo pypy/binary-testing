@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python_version: [pypy-3.10-nightly]
+        python_version: [pypy-3.11-nightly]
 
     timeout-minutes: 120
 
@@ -69,7 +69,11 @@ jobs:
       run: |
         cd repo
         python -c "import os; print('PKG_CONFIG_PATH', os.environ['PKG_CONFIG_PATH'])"
-        python -m pip install . -v -Csetup-args="--vsenv"
+        # python -m pip install . -v -Csetup-args="--vsenv"
+        # Use a newer cython
+        python -m pip install -r requirements/build_requirements.txt
+        python -m pip install git+https://github.com/cython/cython.git
+        python -m pip install --no-build-isolation . -v -Csetup-args="--vsenv"
 
     - name: Test
       shell: bash

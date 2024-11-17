@@ -28,8 +28,8 @@ jobs:
         os: [ubuntu-20.04]
         cpp-version: [g++-8, clang-7]
         python_version:
-          - [pypy-3.10-nightly, pypy10]
-          - [pypy-3.9-nightly, pypy39]
+          - [pypy-3.10-nightly, pypy310]
+          - [pypy-3.11-nightly, pypy311]
     steps:
     - uses: actions/setup-python@v5.0.0
       with:
