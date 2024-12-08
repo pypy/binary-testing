@@ -38,7 +38,8 @@ jobs:
     - name: Checkout PyO3
       uses: actions/checkout@v4.1.1
       with:
-        repository: PyO3/pyo3
+        repository: mattip/pyo3
+        ref: pypy3.11
         path: pyo3
 
     - name: Install Rust toolchain
