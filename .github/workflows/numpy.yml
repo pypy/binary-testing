@@ -49,36 +49,22 @@ jobs:
       with:
         python-version: ${{ matrix.python_version }}
 
-    - name: Install gfortran (macOS)
-      run: |
-        source repo/tools/wheels/gfortran_utils.sh
-        install_gfortran
-      if: matrix.os == 'macos-latest'
-
-    - name: Install dependencies and scipy-openblas
+    - name: Install dependencies
       run: |
         cd repo
         python -m pip install --upgrade pip
         python -m pip install ninja
-        python -m pip install -r requirements/test_requirements.txt spin scipy-openblas32
-        spin config-openblas --with-scipy-openblas=32
+        python -m pip install -r requirements/test_requirements.txt spin
+        python -m pip install -r requirements/build_requirements.txt
+        # Use a newer cython
+        python -m pip install git+https://github.com/cython/cython.git
 
-    - name: Install NumPy
-      env:
-        PKG_CONFIG_PATH: ${{ github.workspace }}/repo/.openblas
+    - name: Install NumPy (use Accelerate)
       run: |
         cd repo
-        python -c "import os; print('PKG_CONFIG_PATH', os.environ['PKG_CONFIG_PATH'])"
-        # python -m pip install . -v -Csetup-args="--vsenv"
-        # Use a newer cython
-        python -m pip install -r requirements/build_requirements.txt
-        python -m pip install git+https://github.com/cython/cython.git
-        python -m pip install --no-build-isolation . -v -Csetup-args="--vsenv"
+        spin build -- -Ddisable-optimization=true -Dallow-noblas=false
 
     - name: Test
-      shell: bash
       run: |
-        # do not cd into the repo directory so we can import numpy
-        cp repo/pytest.ini . 
-        export LIBRARY_PATH="$LIBRARY_PATH:/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
-        pytest --pyargs numpy -rsx
+        cd repo
+        spin test -j2 -- --timeout=600 --durations=10
