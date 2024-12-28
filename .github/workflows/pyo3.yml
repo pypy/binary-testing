@@ -38,7 +38,7 @@ jobs:
     - name: Checkout PyO3
       uses: actions/checkout@v4.1.1
       with:
-        repository: mattip/pyo3
+        repository: pyo3/pyo3
         ref: pypy3.11
         path: pyo3
 
