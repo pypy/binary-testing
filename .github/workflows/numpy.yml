@@ -56,13 +56,21 @@ jobs:
         python -m pip install ninja
         python -m pip install -r requirements/test_requirements.txt spin
         python -m pip install -r requirements/build_requirements.txt
+        pip install -r requirements/ci_requirements.txt
         # Use a newer cython
         python -m pip install git+https://github.com/cython/cython.git
 
     - name: Install NumPy (use Accelerate)
+      if matrix.os == 'macos-latest'
       run: |
         cd repo
         spin build -- -Ddisable-optimization=true -Dallow-noblas=false
+
+    - name: Install NumPy (use Accelerate)
+      if matrix.os != 'macos-latest'
+      run: |
+        cd repo
+        spin build -j2 --with-scipy-openblas=32 -j2 -- -Ddisable-optimization=true
 
     - name: Test
       run: |
