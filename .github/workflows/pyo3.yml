@@ -39,7 +39,6 @@ jobs:
       uses: actions/checkout@v4.1.1
       with:
         repository: pyo3/pyo3
-        ref: pypy3.11
         path: pyo3
 
     - name: Install Rust toolchain
