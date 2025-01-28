@@ -61,13 +61,13 @@ jobs:
         python -m pip install git+https://github.com/cython/cython.git
 
     - name: Install NumPy (use Accelerate)
-      if matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-latest'
       run: |
         cd repo
         spin build -- -Ddisable-optimization=true -Dallow-noblas=false
 
-    - name: Install NumPy (use Accelerate)
-      if matrix.os != 'macos-latest'
+    - name: Install NumPy (use scipy-openblas)
+      if: matrix.os != 'macos-latest'
       run: |
         cd repo
         spin build -j2 --with-scipy-openblas=32 -j2 -- -Ddisable-optimization=true
