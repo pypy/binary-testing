@@ -23,20 +23,18 @@ jobs:
     env:
       BITS: 64
       NPY_USE_BLAS_ILP64: '1'
+      PYPY_ENABLE_WINCONSOLEIO: '1'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python_version: [pypy-3.11-nightly]
-        include:
-          - os: windows-latest
-            PYPY_ENABLE_WINCONSOLEIO: 1 
 
     timeout-minutes: 120
 
     steps:
-    - uses: actions/checkout@v4.2.2
+    - uses: actions/checkout@v4.1.1
       with:
         repository: numpy/numpy
         path: repo
