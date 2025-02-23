@@ -34,7 +34,7 @@ jobs:
             python-version: pypy-3.10-nightly
 
           - os: windows-latest
-            name: pypy3.9-nightly-windows
+            name: pypy3.11-nightly-windows
             toxname: pypy3
             python-version: pypy-3.11-nightly
 
