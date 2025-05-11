@@ -43,6 +43,7 @@ jobs:
     - name: Install pkg-config
       run: |
         choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
+        echo "PKG_CONFIG_PATH=${{ github.workspace }}/.openblas" >> $env:GITHUB_ENV
       if: matrix.os == 'windows-latest'
 
     - uses: actions/setup-python@v5.0.0
@@ -70,9 +71,9 @@ jobs:
       if: matrix.os != 'macos-latest'
       run: |
         cd repo
-        spin build -j2 --with-scipy-openblas=32 -j2 -- -Ddisable-optimization=true --vsenv
+        spin build -j2 --with-scipy-openblas=32 -j2 -- --vsenv
 
     - name: Test
       run: |
         cd repo
-        spin test -j2 -- --timeout=600 --durations=10
+        spin test -- --timeout=600 --durations=10
