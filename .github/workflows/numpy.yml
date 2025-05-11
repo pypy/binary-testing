@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-2019]
         python_version: [pypy-3.11-nightly]
 
     timeout-minutes: 120
@@ -40,13 +40,7 @@ jobs:
         submodules: recursive
         fetch-depth: 0
 
-    - name: Install pkg-config
-      run: |
-        choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
-        echo "PKG_CONFIG_PATH=${{ github.workspace }}/.openblas" >> $env:GITHUB_ENV
-      if: matrix.os == 'windows-latest'
-
-    - uses: actions/setup-python@v5.0.0
+    - uses: actions/setup-python@v5.3.0
       with:
         python-version: ${{ matrix.python_version }}
 
@@ -60,6 +54,12 @@ jobs:
         pip install -r requirements/ci_requirements.txt
         # Use a newer cython
         python -m pip install git+https://github.com/cython/cython.git
+
+    - name: Install pkg-config
+      run: |
+        choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
+        echo "PKG_CONFIG_PATH=${{ github.workspace }}/.openblas" >> $env:GITHUB_ENV
+      if: matrix.os == 'windows-2019'
 
     - name: Install NumPy (use Accelerate)
       if: matrix.os == 'macos-latest'
