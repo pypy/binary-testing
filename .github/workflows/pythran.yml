@@ -19,20 +19,18 @@ on:
 
 jobs:
   pythran-linux:
-    name: Test ubuntu ${{ matrix.python_version[1] }} ${{ matrix.cpp-version }}
-    runs-on: ${{ matrix.os }}
+    name: Test ubuntu ${{ matrix.python_version }} ${{ matrix.cpp-version }}
+    runs-on: ubuntu-22.04
     timeout-minutes: 160
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
-        cpp-version: [g++-12, clang-cw137]
-        python_version:
-          - [pypy-3.11-nightly]
+        python-version: [pypy-3.11-nightly]
+        cpp-version: [g++-12, clang-13]
     steps:
     - uses: actions/setup-python@v5.0.0
       with:
-        python-version: ${{ matrix.python_version[0] }}
+        python-version: ${{ matrix.python-version }}
 
     - uses: actions/checkout@v4.1.1
       with:
@@ -54,7 +52,6 @@ jobs:
         python -m pip install .
         python -m pip install . 'pythran[test]'
         printf '[commpiler]\nblas=openblas\n' > ~/.config/.pythranrc
-        printf 'cflags=-std=c++11 -Wall -Werror -Wno-unknown-pragmas -Wno-unused-local-typedefs -Wno-cpp -Wno-deprecated-declarations -Wno-absolute-value\n' >> ~/.config/.pythranrc
         printf 'cflags=-std=c++11 -Wall -Werror -Wno-unknown-pragmas -Wno-unused-local-typedefs -Wno-cpp -Wno-deprecated-declarations' >> ~/.config/.pythranrc
         if test "${{ matrix.cpp-version }}" = "clang-13" ; then printf -- " -Wno-absolute-value -Wno-parentheses-equality\n" ; else printf "\n" ; fi >> ~/.config/.pythranrc
     - name: Testing minimal CLI
