@@ -43,6 +43,7 @@ jobs:
         cd pythran
         python -m pip install --upgrade pip
         python -m pip install cython
+        pip install pytest-xdist
         python -m pip install numpy -Csetup-args="-Dallow-noblas=true"
         pip install -r requirements.txt
         sudo apt install libopenblas-dev ${{ matrix.cpp-version }}
