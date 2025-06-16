@@ -59,7 +59,7 @@ jobs:
       run: |
         choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
         echo "PKG_CONFIG_PATH=${{ github.workspace }}/.openblas" >> $env:GITHUB_ENV
-      if: matrix.os == 'windows-2019'
+      if: ${{ startswith(matrix.os, 'windows'}}
 
     - name: Install NumPy (use Accelerate)
       if: matrix.os == 'macos-latest'
