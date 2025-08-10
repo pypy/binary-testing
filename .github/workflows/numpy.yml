@@ -58,7 +58,6 @@ jobs:
     - name: Install pkg-config
       run: |
         choco install -y --checksum 6004DF17818F5A6DBF19CB335CC92702 pkgconfiglite
-        echo "PKG_CONFIG_PATH=${{ github.workspace }}/.openblas" >> $env:GITHUB_ENV
       if: ${{ startswith(matrix.os, 'windows') }}
 
     - name: Install NumPy (use Accelerate)
@@ -71,6 +70,7 @@ jobs:
       if: matrix.os != 'macos-latest'
       run: |
         cd repo
+        export PKG_CONFIG_PATH=$PWD/.openblas
         spin build -j2 --with-scipy-openblas=32 -j2 -- --vsenv
 
     - name: Test
