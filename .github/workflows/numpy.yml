@@ -68,6 +68,7 @@ jobs:
 
     - name: Install NumPy (use scipy-openblas)
       if: matrix.os != 'macos-latest'
+      shell: bash
       run: |
         cd repo
         export PKG_CONFIG_PATH=$PWD/.openblas
