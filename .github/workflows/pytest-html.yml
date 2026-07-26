@@ -29,9 +29,9 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            name: pypy3.10-nightly-ubuntu
+            name: pypy3.12-nightly-ubuntu
             toxname: pypy3
-            python-version: pypy-3.10-nightly
+            python-version: pypy-3.12-nightly
 
           - os: windows-latest
             name: pypy3.11-nightly-windows

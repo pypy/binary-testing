@@ -26,7 +26,7 @@ jobs:
       matrix:
         os: [ubuntu, windows, macOS]
         backend: [c]
-        python_version: [pypy-3.11-nightly]
+        python_version: [pypy-3.11-nightly, pypy-3.12-nghtly]
         extra_cflags: ['', '-DCYTHON_USE_TYPE_SPECS=1']
         include:
           - os: windows

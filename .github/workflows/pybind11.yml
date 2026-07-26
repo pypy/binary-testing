@@ -35,6 +35,7 @@ jobs:
         runs-on: [ubuntu-latest, windows-2022, macos-latest]
         python:
         - 'pypy-3.11-nightly'
+        - 'pypy-3.12-nightly'
 
     name: "pybind11 ${{ matrix.python }} • ${{ matrix.runs-on }} x64 ${{ matrix.args }}"
     runs-on: ${{ matrix.runs-on }}
