@@ -47,13 +47,13 @@ jobs:
         with:
           node-version: '20.x'
 
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v7.0.0
         with:
           repository: pytest-dev/pytest-html
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5.0.0
+        uses: actions/setup-python@v6.3.0
         with:
           python-version: ${{ matrix['python-version'] }}
 

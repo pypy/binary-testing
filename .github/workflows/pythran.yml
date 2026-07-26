@@ -28,11 +28,11 @@ jobs:
         python-version: [pypy-3.11-nightly]
         cpp-version: [g++-12, clang-13]
     steps:
-    - uses: actions/setup-python@v5.0.0
+    - uses: actions/setup-python@v6.3.0
       with:
         python-version: ${{ matrix.python-version }}
 
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v7.0.0
       with:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
@@ -75,7 +75,7 @@ jobs:
           architectures: [x64]
     steps:
     - name: Setup Python
-      uses: actions/setup-python@v5.0.0
+      uses: actions/setup-python@v6.3.0
       with:
         python-version: pypy-3.11-nightly
         architecture: ${{ matrix.architecture }}
@@ -83,7 +83,7 @@ jobs:
       run: |
         choco install llvm --yes
         @("C:/Program Files/LLVM/bin") +  (Get-Content $env:GITHUB_PATH) | Set-Content $env:GITHUB_PATH
-    - uses: actions/checkout@v4.1.1
+    - uses: actions/checkout@v7.0.0
       with:
         fetch-depth: 1
         repository: serge-sans-paille/pythran
