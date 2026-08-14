@@ -31,13 +31,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v7.0.0
+    - uses: actions/checkout@v7.0.1
       with:
         repository: wjakob/nanobind
         submodules: true
 
     - name: Setup Python ${{ matrix.python }}
-      uses: actions/setup-python@v6.3.0
+      uses: actions/setup-python@v7.0.0
       with:
         python-version: ${{ matrix.python }}
         cache: 'pip'

@@ -33,14 +33,14 @@ jobs:
     timeout-minutes: 120
 
     steps:
-    - uses: actions/checkout@v7.0.0
+    - uses: actions/checkout@v7.0.1
       with:
         repository: numpy/numpy
         path: repo
         submodules: recursive
         fetch-depth: 0
 
-    - uses: actions/setup-python@v6.3.0
+    - uses: actions/setup-python@v7.0.0
       with:
         python-version: ${{ matrix.python_version }}
 
