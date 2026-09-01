@@ -75,7 +75,7 @@ jobs:
         PYO3_CI: 1
 
     # Build some extension modules using PyO3 and test them using PyPy.
-    - name: Test PyO3 examples
+    - name: Run PyO3 Python test suite
       shell: bash
       working-directory: pyo3
       run: nox -s test-py
