@@ -48,44 +48,36 @@ jobs:
         # needed to correctly format errors, see #1865
         components: rust-src
 
+    # In the future, might want to also try using the "abi3" feature once PyPy
+    # supports the Python stable API.
+
+    - name: Prepare required packages
+      run: python -m pip install -U pip nox
+
+    - name: Check PyO3 ffi definitions
+      shell: bash
+      working-directory: pyo3
+      run: nox -s ffi-check
+
     # NB only builds PyO3's Rust library and tests, can't run these, because
     # PyPy doesn't support a Py_Initialize API to call PyPy from Rust
     # executables.
     #
     # These jobs just serve as a check that PyO3 is able to link against PyPy
     # symbols as expected.
-    - name: Build PyO3 Rust lib and tests - no features
+    - name: Run PyO3 Rust test suite
       shell: bash
-      run: |
-        cd pyo3
-        cargo build --lib --tests
+      working-directory: pyo3
+      run: nox -s test-rust
       env:
         # Necessary to force PyO3 to allow building against PyPy despite no
         # Py_Initialize API
         PYO3_CI: 1
-
-    - name: Build PyO3 Rust lib and tests - with features
-      shell: bash
-      run: |
-        cd pyo3
-        cargo build --lib --tests --features=full
-      env:
-        # Necessary to force PyO3 to allow building against PyPy despite no
-        # Py_Initialize API
-        PYO3_CI: 1
-
-    # In the future, might want to also try using the "abi3" feature once PyPy
-    # supports the Python stable API.
-
-    - name: Prepare required packages
-      run: |
-        python -m pip install -U pip nox
 
     # Build some extension modules using PyO3 and test them using PyPy.
-    - name: Test PyO3 examples
+    - name: Run PyO3 Python test suite
       shell: bash
-      run: |
-        cd pyo3
-        nox -s test-py
+      working-directory: pyo3
+      run: nox -s test-py
       env:
         CARGO_TARGET_DIR: ${{ github.workspace }}/pyo3/target
