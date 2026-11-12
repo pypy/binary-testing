@@ -6,6 +6,7 @@ The jobs run once-a-week via gihub actions
 As can be seen in the [actions tab](https://github.com/pypy/binary-testing/actions) this currently runs
 
 - Cython
+- lxml
 - nanobind
 - Numpy
 - pybind11

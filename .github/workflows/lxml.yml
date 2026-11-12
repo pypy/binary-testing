@@ -1,0 +1,72 @@
+name: lxml
+
+# Controls when the action will run.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/lxml.yml'
+
+  schedule:
+  #        ┌───────────── minute (0 - 59)
+  #        │ ┌───────────── hour (0 - 23)
+  #        │ │ ┌───────────── day of the month (1 - 31)
+  #        │ │ │ ┌───────────── month (1 - 12 or JAN-DEC)
+  #        │ │ │ │ ┌───────────── day of the week (0 - 6 or SUN-SAT)
+  #        │ │ │ │ │
+  - cron: "0 2 * * 0"
+
+jobs:
+  lxml:
+    name: lxml ${{ matrix.os }}/${{ matrix.python_version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python_version: [pypy-3.11-nightly, pypy-3.12-nightly]
+
+    timeout-minutes: 60
+
+    env:
+      # Build against the system libxml2/libxslt
+      STATIC_DEPS: 'false'
+
+    steps:
+    - uses: actions/checkout@v7.0.1
+      with:
+        repository: lxml/lxml
+        path: repo
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v7.1.0
+      with:
+        python-version: ${{ matrix.python_version }}
+
+    - name: Install libxml2 and libxslt
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxml2-dev libxslt1-dev zlib1g-dev
+
+    - name: Install dependencies
+      run: |
+        cd repo
+        python -m pip install --upgrade pip setuptools wheel
+        # Use a newer cython
+        python -m pip install git+https://github.com/cython/cython.git
+        python -m pip install -r test-requirements.txt lxml_html_clean
+
+    - name: Show compiler version
+      run: |
+        cc --version
+
+    - name: Build lxml
+      run: |
+        cd repo
+        make inplace
+
+    - name: Test
+      run: |
+        cd repo
+        python test.py -vv -p
