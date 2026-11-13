@@ -48,8 +48,7 @@ jobs:
       run: |
         cd repo
         python -m pip install --upgrade pip
-        python -m pip install --group test
-        python -m pip install --group dev-cli
+        python -m pip install --group dev-cli --group test-extending
         # Use a newer cython
         # python -m pip install git+https://github.com/cython/cython.git
 
@@ -64,6 +63,7 @@ jobs:
       shell: bash
       run: |
         cd repo
+        python -m pip install --group openblas32
         export PKG_CONFIG_PATH=$PWD/.openblas
         spin build -j2 --with-scipy-openblas=64 -j2 -- --vsenv
 
