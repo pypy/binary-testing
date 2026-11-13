@@ -46,7 +46,7 @@ jobs:
         repository: pybind/pybind11
 
     - name: Setup Python ${{ matrix.python }}
-      uses: actions/setup-python@v7.0.0
+      uses: actions/setup-python@v7.1.0
       with:
         python-version: ${{ matrix.python }}
 
@@ -64,7 +64,7 @@ jobs:
 
     - name: Cache wheels
       if: runner.os == 'macOS'
-      uses: actions/cache@v4
+      uses: actions/cache@v6.1.0
       with:
         # This path is specific to macOS - we really only need it for PyPy NumPy wheels
         # See https://github.com/actions/cache/blob/master/examples.md#python---pip
