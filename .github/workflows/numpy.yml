@@ -63,7 +63,7 @@ jobs:
       shell: bash
       run: |
         cd repo
-        python -m pip install --group openblas32
+        python -m pip install --group openblas64
         export PKG_CONFIG_PATH=$PWD/.openblas
         spin build -j2 --with-scipy-openblas=64 -j2 -- --vsenv
 
