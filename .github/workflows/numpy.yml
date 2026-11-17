@@ -44,6 +44,42 @@ jobs:
       with:
         python-version: ${{ matrix.python_version }}
 
+    # The windows runner has Strawberry Perl on PATH, so meson resolves
+    # dependency('python3') through C:\Strawberry's pkg-config and finds a
+    # nonexistent python3.9 include dir, and uses C:\Strawberry\c\bin\ccache.exe
+    # as the compiler launcher. Every test_cython build then fails with
+    # "Cannot open include file: 'Python.h'". Drop it for the rest of the job.
+    - name: Remove Strawberry Perl from PATH (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        $filtered = ($env:PATH.Split(';') | Where-Object { $_ -and $_ -notlike '*Strawberry*' }) -join ';'
+        "PATH=$filtered" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+    - name: Check what pkg-config resolves to (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: pwsh
+      run: |
+        if ($env:PATH -like '*Strawberry*') { throw 'Strawberry Perl is still on PATH' }
+        Get-Command pkg-config, ccache -All -ErrorAction SilentlyContinue |
+          Select-Object -ExpandProperty Source
+
+    # numpy_quaddtype is a macOS-only entry in numpy's test-extending group,
+    # with no PyPy3.12 wheel, so pip builds it from sdist and pulls numpy 2.5.5
+    # as a build requirement. That sdist vendors a pythoncapi-compat predating
+    # PyPy3.12 support: its static inline definitions collide with the
+    # declarations PyPy now provides, and the install step dies before numpy
+    # itself is ever built. Upstream fixed the version guard
+    # (python/pythoncapi-compat#177, #180) and numpy main carries the newer pin,
+    # but maintenance/2.5.x does not. The three tests using quaddtype skip when
+    # it is not installed, so just drop it until a 2.5.x release has the fix.
+    - name: Drop numpy_quaddtype from the test-extending group (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        cd repo
+        sed -i '' '/numpy_quaddtype/d' pyproject.toml
+        git diff --stat
+
     - name: Install dependencies
       run: |
         cd repo
